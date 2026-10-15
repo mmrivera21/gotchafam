@@ -84,9 +84,9 @@ var cur=$('cursor'),wait=function(ms){return new Promise(function(r){setTimeout(
 function moveTo(el){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(40,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(1300)}
 function click(){cur.classList.add('click');return wait(180).then(function(){cur.classList.remove('click')})}
 function cap(t){$('cap').textContent=t}
-(async function(){await wait(500);cap('Step 1: Click the search box');await moveTo($('fbox'));await click();$('fbox').classList.add('focus');
-await wait(300);cap('Step 2: Type your question');var t=$('ftext');for(var i=0;i<q.length;i++){t.textContent+=q[i];await wait(60+Math.random()*60)}
-await wait(400);cap('Step 3: Hit search... was that so hard, fam?');await moveTo($('fbtn'));$('fbtn').classList.add('press');await click();$('fbtn').classList.remove('press');
+(async function(){await wait(500);cap('When you have a question, you can go here...');await moveTo($('fbox'));await click();$('fbox').classList.add('focus');
+await wait(300);cap('...and do this.');var t=$('ftext');for(var i=0;i<q.length;i++){t.textContent+=q[i];await wait(60+Math.random()*60)}
+await wait(400);cap('It\'s amazing, I know.');await moveTo($('fbtn'));$('fbtn').classList.add('press');await click();$('fbtn').classList.remove('press');
 await wait(2000);location.href=target(q)})();
 })();
 </script></body></html>
