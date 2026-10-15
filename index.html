@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GotchaFam – We gotcha, fam.</title><link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#1e1b4b,#7c3aed 60%,#db2777);color:#fff;min-height:100vh}
+main{max-width:760px;margin:0 auto;padding:40px 20px}
+h1{font-size:clamp(2.6rem,9vw,4.5rem);margin:0;letter-spacing:-2px}h1 span{color:#fde047}
+.tag{font-size:1.15rem;opacity:.9;margin:.4em 0 2em}
+.card{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:24px;margin-bottom:28px}
+input[type=text]{width:100%;padding:16px 20px;font-size:1.1rem;border-radius:999px;border:0;outline:none;color:#111}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+button{cursor:pointer;border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:1rem;background:#fde047;color:#1e1b4b;transition:transform .15s}button:hover{transform:translateY(-2px)}
+button.alt{background:#fff}
+#out{display:none;margin-top:16px}#link{width:100%;padding:12px;border-radius:12px;border:0;font-family:monospace;color:#111}
+label{font-size:.95rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.step{background:rgba(0,0,0,.2);border-radius:14px;padding:16px}.step b{display:block;font-size:2rem;color:#fde047}
+details{background:rgba(0,0,0,.2);border-radius:12px;padding:12px 16px;margin:8px 0}summary{cursor:pointer;font-weight:700}
+footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
+/* animation */
+#anim{display:none;position:fixed;inset:0;background:#fff;color:#202124;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.logo{font-size:clamp(2.5rem,10vw,4.5rem);font-weight:800;letter-spacing:-2px;margin-bottom:24px}
+.logo i{font-style:normal}.c1{color:#4285f4}.c2{color:#ea4335}.c3{color:#fbbc05}.c4{color:#34a853}
+#fbox{width:min(560px,100%);border:1px solid #dfe1e5;border-radius:999px;padding:14px 22px;font-size:1.1rem;min-height:52px;box-shadow:0 1px 6px rgba(32,33,36,.15);transition:box-shadow .2s}
+#fbox.focus{box-shadow:0 0 0 3px #7c3aed55}#ftext:after{content:"|";animation:bl 1s steps(1) infinite;color:#7c3aed}@keyframes bl{50%{opacity:0}}
+#fbtn{margin-top:22px;background:#f1f3f4;color:#3c4043;border:1px solid #f1f3f4;border-radius:8px;font-weight:500}#fbtn.press{background:#ddd;transform:scale(.94)}
+#cap{margin-top:30px;min-height:60px;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700;color:#7c3aed;text-align:center;transition:opacity .3s}
+#cursor{position:fixed;width:28px;height:28px;left:20px;top:20px;transition:left 1.2s ease-in-out,top 1.2s ease-in-out,transform .15s;pointer-events:none;z-index:9}
+#cursor.click{transform:scale(.8)}
+#skip{position:fixed;bottom:18px;right:20px;color:#7c3aed;font-weight:700}#brand{position:fixed;top:14px;left:18px;font-weight:800;color:#7c3aed}
+</style></head><body>
+<main id="home">
+<h1>Gotcha<span>Fam</span></h1>
+<p class="tag">For people who'd rather ask than search. We gotcha, fam. 😎</p>
+<section class="card">
+<input id="q" type="text" placeholder="Type the question they asked you..." autofocus>
+<div class="row"><button id="gen">Make the link</button>
+<label><input type="checkbox" id="ddg"> Use DuckDuckGo</label></div>
+<div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="preview">Preview</button></div></div>
+</section>
+<section class="card"><h2>How it works</h2><div class="steps">
+<div class="step"><b>1</b>Type the question your friend could've searched themselves.</div>
+<div class="step"><b>2</b>Hit "Make the link" and copy it.</div>
+<div class="step"><b>3</b>Send it. They watch a gentle demo of searching, then land on real results.</div></div></section>
+<section class="card"><h2>FAQ</h2>
+<details><summary>Is this rude?</summary><p>Lovingly sassy. Use responsibly, fam.</p></details>
+<details><summary>Do you store my questions?</summary><p>Nope. No backend — the question lives only in the link.</p></details>
+<details><summary>Can I use something other than Google?</summary><p>Yes — tick DuckDuckGo (adds <code>&amp;e=ddg</code> to the link).</p></details>
+</section>
+<footer>GotchaFam · not affiliated with Google or DuckDuckGo</footer>
+</main>
+<div id="anim"><div id="brand">GotchaFam</div>
+<div class="logo" id="logo"></div>
+<div id="fbox"><span id="ftext"></span></div>
+<button id="fbtn">Search</button>
+<div id="cap"></div><a id="skip" href="#">Skip »</a>
+<svg id="cursor" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+var p=new URLSearchParams(location.search),q=(p.get('q')||'').trim(),eng=p.get('e')==='ddg'?'ddg':'google';
+function target(s){return eng==='ddg'?'https://duckduckgo.com/?q='+encodeURIComponent(s):'https://www.google.com/search?q='+encodeURIComponent(s)}
+function makeLink(){var v=$('q').value.trim();if(!v){$('q').focus();return}
+var u=location.origin+location.pathname+'?q='+encodeURIComponent(v)+($('ddg').checked?'&e=ddg':'');
+$('link').value=u;$('out').style.display='block';return u}
+$('gen').onclick=makeLink;$('q').onkeydown=function(e){if(e.key==='Enter')makeLink()};
+$('copy').onclick=function(){var b=this,l=$('link');(navigator.clipboard?navigator.clipboard.writeText(l.value):Promise.reject()).catch(function(){l.select();document.execCommand('copy')}).finally(function(){b.textContent='Copied! ✅';setTimeout(function(){b.textContent='Copy link'},1500)})};
+$('preview').onclick=function(){if($('link').value)location.href=$('link').value};
+if(!q)return;
+document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='flex';
+$('logo').innerHTML=eng==='ddg'?'<i class="c2">Duck</i><i class="c1">Duck</i><i class="c4">Go</i>':'<i class="c1">G</i><i class="c2">o</i><i class="c3">o</i><i class="c1">g</i><i class="c4">l</i><i class="c2">e</i>';
+$('skip').href=target(q);
+var cur=$('cursor'),wait=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
+function moveTo(el){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(40,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(1300)}
+function click(){cur.classList.add('click');return wait(180).then(function(){cur.classList.remove('click')})}
+function cap(t){$('cap').textContent=t}
+(async function(){await wait(500);cap('Step 1: Click the search box');await moveTo($('fbox'));await click();$('fbox').classList.add('focus');
+await wait(300);cap('Step 2: Type your question');var t=$('ftext');for(var i=0;i<q.length;i++){t.textContent+=q[i];await wait(60+Math.random()*60)}
+await wait(400);cap('Step 3: Hit search... was that so hard, fam?');await moveTo($('fbtn'));$('fbtn').classList.add('press');await click();$('fbtn').classList.remove('press');
+await wait(2000);location.href=target(q)})();
+})();
+</script></body></html>
