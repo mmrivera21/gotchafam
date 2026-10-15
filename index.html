@@ -39,14 +39,18 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 #anim.e-yt #fbox{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 20px;background:#121212;border-color:#303030;box-shadow:none;overflow:hidden}
 #anim.e-yt #ftext:empty:before{content:attr(data-ph);opacity:.5}
 #anim.e-yt #fbtn{margin:0;flex:none;height:52px;width:64px;border-radius:0;background:#222;border:0;border-left:1px solid #303030;color:#f1f1f1;font-size:1.1rem}
-#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #skip{color:#ff8a73}
+#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
+#skip{color:#ff8a73}
+#disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
 #skip{color:#ffd1c7}
 #anim.e-yt{background:#0f0f0f;color:#f1f1f1}#anim.e-yt .logo{color:#f1f1f1;font-weight:700;letter-spacing:-1.5px;display:flex;align-items:center;gap:8px}
 .ytl{display:inline-flex;align-items:center;justify-content:center;background:#ff0000;color:#fff;border-radius:14px;width:1.4em;height:1em;font-size:.8em}
 #anim.e-yt #fbox{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 20px;background:#121212;border-color:#303030;box-shadow:none;overflow:hidden}
 #anim.e-yt #ftext:empty:before{content:attr(data-ph);opacity:.5}
 #anim.e-yt #fbtn{margin:0;flex:none;height:52px;width:64px;border-radius:0;background:#222;border:0;border-left:1px solid #303030;color:#f1f1f1;font-size:1.1rem}
-#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #skip{color:#ff8a73}
+#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
+#skip{color:#ff8a73}
+#disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
 #skip{position:fixed;bottom:18px;right:20px;color:#ff6f61;font-weight:700}#brand{position:fixed;top:14px;left:18px;font-weight:800;color:#ff6f61}
 </style></head><body>
 <main id="home">
@@ -67,14 +71,15 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <details><summary>Is this rude?</summary><p>Lovingly sassy. Use responsibly, fam.</p></details>
 <details><summary>Do you store my questions?</summary><p>Nope. No backend — the question lives only in the link.</p></details>
 <details><summary>Can I use something other than Google?</summary><p>Yes — pick DuckDuckGo, Grok or ChatGPT from the Engine menu (adds <code>&amp;e=ddg</code>, <code>&amp;e=grok</code> or <code>&amp;e=chatgpt</code>) — or YouTube (<code>&amp;e=yt</code>).</p></details>
+<details><summary>Is this affiliated with Google, Grok, or ChatGPT?</summary><p>Nope. GotchaFam is an independent, just-for-fun site with no connection to Google, DuckDuckGo, YouTube, xAI, or OpenAI.</p></details>
 </section>
-<footer>GotchaFam · not affiliated with Google or DuckDuckGo</footer>
+<footer>GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</footer>
 </main>
 <div id="anim"><div id="brand">GotchaFam</div>
 <div class="logo" id="logo"></div>
 <div id="fbox"><span id="ftext"></span></div>
 <button id="fbtn">Search</button>
-<div id="cap"></div><div id="tip" style="display:none;margin-top:14px;font-size:1.05rem;text-align:center">Want some in-depth answers? Ask <a id="tg" style="color:#ff6f61;font-weight:700">Grok</a> or <a id="tc" style="color:#ff6f61;font-weight:700">ChatGPT</a><br><a id="ty" style="color:#ff6f61;font-weight:700">There's even videos of what you're looking for!</a></div><a id="skip" href="#">Skip »</a>
+<div id="cap"></div><div id="tip" style="display:none;margin-top:14px;font-size:1.05rem;text-align:center">Want some in-depth answers? Ask <a id="tg" style="color:#ff6f61;font-weight:700">Grok</a> or <a id="tc" style="color:#ff6f61;font-weight:700">ChatGPT</a><br><a id="ty" style="color:#ff6f61;font-weight:700">There's even videos of what you're looking for!</a></div><a id="skip" href="#">Skip »</a><div id="disc">GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</div>
 <svg id="cursor" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>
 </div>
 <script>
