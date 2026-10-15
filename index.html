@@ -35,7 +35,7 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <input id="q" type="text" placeholder="Type the question they asked you..." autofocus>
 <div class="row"><button id="gen">Make the link</button>
 <label><input type="checkbox" id="ddg"> Use DuckDuckGo</label></div>
-<div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="preview">Preview</button></div></div>
+<div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="shorten">Shorten link</button><button class="alt" id="preview">Preview</button></div><p id="msg" style="margin:8px 0 0;font-size:.95rem;min-height:1.2em"></p></div>
 </section>
 <section class="card"><h2>How it works</h2><div class="steps">
 <div class="step"><b>1</b>Type the question your friend could've searched themselves.</div>
@@ -61,10 +61,20 @@ var $=function(id){return document.getElementById(id)};
 var p=new URLSearchParams(location.search),q=(p.get('q')||'').trim(),eng=p.get('e')==='ddg'?'ddg':'google';
 function target(s){return eng==='ddg'?'https://duckduckgo.com/?q='+encodeURIComponent(s):'https://www.google.com/search?q='+encodeURIComponent(s)}
 function makeLink(){var v=$('q').value.trim();if(!v){$('q').focus();return}
-var u=location.origin+location.pathname+'?q='+encodeURIComponent(v)+($('ddg').checked?'&e=ddg':'');
-$('link').value=u;$('out').style.display='block';return u}
+var base=/(^|\.)gotchafam\.com$/.test(location.hostname)?'https://gotchafam.com/':location.origin+location.pathname;
+var u=base+'?q='+encodeURIComponent(v)+($('ddg').checked?'&e=ddg':'');
+$('link').value=u;$('msg').textContent='';$('out').style.display='block';return u}
 $('gen').onclick=makeLink;$('q').onkeydown=function(e){if(e.key==='Enter')makeLink()};
 $('copy').onclick=function(){var b=this,l=$('link');(navigator.clipboard?navigator.clipboard.writeText(l.value):Promise.reject()).catch(function(){l.select();document.execCommand('copy')}).finally(function(){b.textContent='Copied! ✅';setTimeout(function(){b.textContent='Copy link'},1500)})};
+function jsonp(url,ms){return new Promise(function(res,rej){var cb='gfcb'+Date.now()+Math.floor(Math.random()*1e6),sc=document.createElement('script'),t;
+function done(){clearTimeout(t);delete window[cb];sc.remove()}
+window[cb]=function(d){done();res(d)};sc.onerror=function(){done();rej(new Error('network'))};t=setTimeout(function(){done();rej(new Error('timeout'))},ms||8000);
+sc.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb;document.head.appendChild(sc)})}
+function viaIsgd(u){return jsonp('https://is.gd/create.php?format=json&url='+encodeURIComponent(u)).then(function(d){if(d&&d.shorturl)return d.shorturl;throw new Error((d&&d.errormessage)||'is.gd failed')})}
+function viaDagd(u){var c=new AbortController(),t=setTimeout(function(){c.abort()},8000);return fetch('https://da.gd/s?url='+encodeURIComponent(u),{signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw new Error('da.gd '+r.status);return r.text()}).then(function(s){s=s.trim();if(!/^https:\/\/da\.gd\/\S+$/.test(s))throw new Error('da.gd bad reply');return s})}
+$('shorten').onclick=function(){var b=this,l=$('link'),long=l.value;if(!long)return;if(/^https:\/\/(is|da)\.gd\//.test(long)){$('msg').textContent='Already short, fam 👌';return}
+b.disabled=true;b.textContent='Shortening…';$('msg').textContent='';
+viaIsgd(long).catch(function(){return viaDagd(long)}).then(function(s){l.value=s;$('msg').textContent='Shortened! Copy link now copies the short one ✂️'}).catch(function(){l.value=long;$('msg').textContent='Couldn\u2019t shorten right now, fam — the long link still works 👍'}).finally(function(){b.disabled=false;b.textContent='Shorten link'})};
 $('preview').onclick=function(){if($('link').value)location.href=$('link').value};
 if(!q)return;
 document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='flex';
