@@ -26,6 +26,15 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 #cap{margin-top:30px;min-height:60px;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700;color:#7c3aed;text-align:center;transition:opacity .3s}
 #cursor{position:fixed;width:28px;height:28px;left:20px;top:20px;transition:left 1.2s ease-in-out,top 1.2s ease-in-out,transform .15s;pointer-events:none;z-index:9}
 #cursor.click{transform:scale(.8)}
+#anim.e-grok,#anim.e-chatgpt{}
+#anim.e-grok{background:#0a0a0a;color:#fafafa}#anim.e-grok .logo{color:#fafafa;font-weight:600;letter-spacing:-1px}
+#anim.e-chatgpt{background:#fff;color:#0d0d0d}#anim.e-chatgpt .logo{font-size:clamp(1.6rem,6vw,2.2rem);font-weight:600;letter-spacing:0}
+#anim.e-grok #fbox,#anim.e-chatgpt #fbox{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:28px;min-height:64px;padding:12px 12px 12px 24px}
+#anim.e-grok #fbox{background:#1a1a1a;border-color:#333;box-shadow:none}#anim.e-chatgpt #fbox{background:#fff;border-color:#e5e5e5;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+#anim.e-grok #ftext:empty:before,#anim.e-chatgpt #ftext:empty:before{content:attr(data-ph);opacity:.5}
+#anim.e-grok #fbtn,#anim.e-chatgpt #fbtn{margin:0;flex:none;width:40px;height:40px;padding:0;border-radius:50%;font-size:1.2rem;font-weight:700;border:0}
+#anim.e-grok #fbtn{background:#fafafa;color:#0a0a0a}#anim.e-chatgpt #fbtn{background:#0d0d0d;color:#fff}
+#anim.e-grok #cap{color:#c4b5fd}#anim.e-grok #brand,#anim.e-grok #skip{color:#c4b5fd}
 #skip{position:fixed;bottom:18px;right:20px;color:#7c3aed;font-weight:700}#brand{position:fixed;top:14px;left:18px;font-weight:800;color:#7c3aed}
 </style></head><body>
 <main id="home">
@@ -34,7 +43,8 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <section class="card">
 <input id="q" type="text" placeholder="Type the question they asked you..." autofocus>
 <div class="row"><button id="gen">Make the link</button>
-<label><input type="checkbox" id="ddg"> Use DuckDuckGo</label></div>
+<label>Engine: <select id="eng" style="padding:10px 14px;border-radius:999px;border:0;font-size:1rem"><option value="google">Google</option><option value="ddg">DuckDuckGo</option><option value="grok">Grok</option><option value="chatgpt">ChatGPT</option></select></label></div>
+<p class="hint" style="margin:10px 0 0;opacity:.9;font-size:.95rem">💡 Want a real in-depth answer? Ask Grok or ChatGPT instead.</p>
 <div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="shorten">Shorten link</button><button class="alt" id="preview">Preview</button></div><p id="msg" style="margin:8px 0 0;font-size:.95rem;min-height:1.2em"></p></div>
 </section>
 <section class="card"><h2>How it works</h2><div class="steps">
@@ -44,7 +54,7 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <section class="card"><h2>FAQ</h2>
 <details><summary>Is this rude?</summary><p>Lovingly sassy. Use responsibly, fam.</p></details>
 <details><summary>Do you store my questions?</summary><p>Nope. No backend — the question lives only in the link.</p></details>
-<details><summary>Can I use something other than Google?</summary><p>Yes — tick DuckDuckGo (adds <code>&amp;e=ddg</code> to the link).</p></details>
+<details><summary>Can I use something other than Google?</summary><p>Yes — pick DuckDuckGo, Grok or ChatGPT from the Engine menu (adds <code>&amp;e=ddg</code>, <code>&amp;e=grok</code> or <code>&amp;e=chatgpt</code>).</p></details>
 </section>
 <footer>GotchaFam · not affiliated with Google or DuckDuckGo</footer>
 </main>
@@ -52,17 +62,18 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <div class="logo" id="logo"></div>
 <div id="fbox"><span id="ftext"></span></div>
 <button id="fbtn">Search</button>
-<div id="cap"></div><a id="skip" href="#">Skip »</a>
+<div id="cap"></div><div id="tip" style="display:none;margin-top:14px;font-size:1.05rem;text-align:center">Want some in-depth answers? Ask <a id="tg" style="color:#7c3aed;font-weight:700">Grok</a> or <a id="tc" style="color:#7c3aed;font-weight:700">ChatGPT</a></div><a id="skip" href="#">Skip »</a>
 <svg id="cursor" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>
 </div>
 <script>
 (function(){
 var $=function(id){return document.getElementById(id)};
-var p=new URLSearchParams(location.search),q=(p.get('q')||'').trim(),eng=p.get('e')==='ddg'?'ddg':'google';
-function target(s){return eng==='ddg'?'https://duckduckgo.com/?q='+encodeURIComponent(s):'https://www.google.com/search?q='+encodeURIComponent(s)}
+var p=new URLSearchParams(location.search),q=(p.get('q')||'').trim(),eng=({ddg:1,grok:1,chatgpt:1})[p.get('e')]?p.get('e'):'google';
+var BASES={google:'https://www.google.com/search?q=',ddg:'https://duckduckgo.com/?q=',grok:'https://grok.com/?q=',chatgpt:'https://chatgpt.com/?q='};
+function target(s){return BASES[eng]+encodeURIComponent(s)}
 function makeLink(){var v=$('q').value.trim();if(!v){$('q').focus();return}
 var base=/(^|\.)gotchafam\.com$/.test(location.hostname)?'https://gotchafam.com/':location.origin+location.pathname;
-var u=base+'?q='+encodeURIComponent(v)+($('ddg').checked?'&e=ddg':'');
+var u=base+'?q='+encodeURIComponent(v)+($('eng').value!=='google'?'&e='+$('eng').value:'');
 $('link').value=u;$('msg').textContent='';$('out').style.display='block';return u}
 $('gen').onclick=makeLink;$('q').onkeydown=function(e){if(e.key==='Enter')makeLink()};
 $('copy').onclick=function(){var b=this,l=$('link');(navigator.clipboard?navigator.clipboard.writeText(l.value):Promise.reject()).catch(function(){l.select();document.execCommand('copy')}).finally(function(){b.textContent='Copied! ✅';setTimeout(function(){b.textContent='Copy link'},1500)})};
@@ -78,7 +89,9 @@ viaIsgd(long).catch(function(){return viaDagd(long)}).then(function(s){l.value=s
 $('preview').onclick=function(){if($('link').value)location.href=$('link').value};
 if(!q)return;
 document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='flex';
-$('logo').innerHTML=eng==='ddg'?'<i class="c2">Duck</i><i class="c1">Duck</i><i class="c4">Go</i>':'<i class="c1">G</i><i class="c2">o</i><i class="c3">o</i><i class="c1">g</i><i class="c4">l</i><i class="c2">e</i>';
+var LOGOS={google:'<i class="c1">G</i><i class="c2">o</i><i class="c3">o</i><i class="c1">g</i><i class="c4">l</i><i class="c2">e</i>',ddg:'<i class="c2">Duck</i><i class="c1">Duck</i><i class="c4">Go</i>',grok:'Grok',chatgpt:'ChatGPT'};
+$('logo').innerHTML=LOGOS[eng];$('anim').className='e-'+eng;
+if(eng==='grok'||eng==='chatgpt'){$('ftext').setAttribute('data-ph','Ask anything');$('fbtn').innerHTML='&#8593;';$('fbtn').setAttribute('aria-label','Send');$('fbox').appendChild($('fbtn'))}
 $('skip').href=target(q);
 var cur=$('cursor'),wait=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
 function moveTo(el){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(40,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(1300)}
@@ -87,6 +100,7 @@ function cap(t){$('cap').textContent=t}
 (async function(){await wait(500);cap('When you have a question, you can go here...');await moveTo($('fbox'));await click();$('fbox').classList.add('focus');
 await wait(300);cap('...and do this.');var t=$('ftext');for(var i=0;i<q.length;i++){t.textContent+=q[i];await wait(60+Math.random()*60)}
 await wait(400);cap('It\'s amazing, I know.');await moveTo($('fbtn'));$('fbtn').classList.add('press');await click();$('fbtn').classList.remove('press');
-await wait(2000);location.href=target(q)})();
+if(eng==='google'||eng==='ddg'){$('tg').href=BASES.grok+encodeURIComponent(q);$('tc').href=BASES.chatgpt+encodeURIComponent(q);await wait(900);$('tip').style.display='block';await wait(3500)}else await wait(2000);
+location.href=target(q)})();
 })();
 </script></body></html>
