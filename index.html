@@ -2,56 +2,60 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GotchaFam – We gotcha, fam.</title><link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#0b1d3a,#1e3a8a 60%,#ff6f61);color:#fff7f0;min-height:100vh}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#0a1a3f,#13306e 65%,#1c3f8f);color:#ffffff;min-height:100vh}
 main{max-width:760px;margin:0 auto;padding:40px 20px}
-h1{font-size:clamp(2.6rem,9vw,4.5rem);margin:0;letter-spacing:-2px}h1 span{color:#ff8a73}
+h1{font-size:clamp(2.6rem,9vw,4.5rem);margin:0;letter-spacing:-2px}h1 span{color:#ff4d5a}
 .tag{font-size:1.15rem;opacity:.9;margin:.4em 0 2em}
 .card{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:24px;margin-bottom:28px}
 input[type=text]{width:100%;padding:16px 20px;font-size:1.1rem;border-radius:999px;border:0;outline:none;color:#111}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
-button{cursor:pointer;border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:1rem;background:#ff8a73;color:#0b1d3a;transition:transform .15s}button:hover{transform:translateY(-2px)}
-button.alt{background:#fff}
+button{cursor:pointer;border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:1rem;background:#e63946;color:#fff;transition:transform .15s}button:hover{transform:translateY(-2px)}
+button.alt{background:#fff;color:#0a1a3f}
 #out{display:none;margin-top:16px}#link{width:100%;padding:12px;border-radius:12px;border:0;font-family:monospace;color:#111}
 label{font-size:.95rem}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.step{background:rgba(0,0,0,.2);border-radius:14px;padding:16px}.step b{display:block;font-size:2rem;color:#ff8a73}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.step{background:rgba(0,0,0,.2);border-radius:14px;padding:16px}.step b{display:block;font-size:2rem;color:#ff4d5a}
 details{background:rgba(0,0,0,.2);border-radius:12px;padding:12px 16px;margin:8px 0}summary{cursor:pointer;font-weight:700}
 footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
-/* animation */
-#anim{display:none;position:fixed;inset:0;background:#fff;color:#202124;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.logo{font-size:clamp(2.5rem,10vw,4.5rem);font-weight:800;letter-spacing:-2px;margin-bottom:24px}
+/* animation tour */
+#anim{display:none;position:fixed;inset:0;overflow:hidden;background:#fff;color:#202124}
+#stage{position:absolute;left:0;top:0;width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;transform-origin:0 0;transition:transform .75s cubic-bezier(.65,0,.35,1)}
+.logo{font-size:clamp(2.3rem,9vw,4.2rem);font-weight:800;letter-spacing:-2px;margin-bottom:20px}
 .logo i{font-style:normal}.c1{color:#4285f4}.c2{color:#ea4335}.c3{color:#fbbc05}.c4{color:#34a853}
-#fbox{width:min(560px,100%);border:1px solid #dfe1e5;border-radius:999px;padding:14px 22px;font-size:1.1rem;min-height:52px;box-shadow:0 1px 6px rgba(32,33,36,.15);transition:box-shadow .2s}
-#fbox.focus{box-shadow:0 0 0 3px #ff6f6155}#ftext:after{content:"|";animation:bl 1s steps(1) infinite;color:#ff6f61}@keyframes bl{50%{opacity:0}}
-#fbtn{margin-top:22px;background:#f1f3f4;color:#3c4043;border:1px solid #f1f3f4;border-radius:8px;font-weight:500}#fbtn.press{background:#ddd;transform:scale(.94)}
-#cap{margin-top:30px;min-height:60px;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700;color:#ff6f61;text-align:center;transition:opacity .3s}
-#cursor{position:fixed;width:28px;height:28px;left:20px;top:20px;transition:left 1.2s ease-in-out,top 1.2s ease-in-out,transform .15s;pointer-events:none;z-index:9}
-#cursor.click{transform:scale(.8)}
-#anim.e-grok,#anim.e-chatgpt{}
+#fbox{width:min(560px,92vw);border:1px solid #dfe1e5;border-radius:999px;padding:14px 22px;font-size:1.1rem;min-height:52px;box-shadow:0 1px 6px rgba(32,33,36,.15);transition:box-shadow .2s}
+#fbox.focus{box-shadow:0 0 0 3px #d6283955}#ftext:after{content:"|";animation:bl 1s steps(1) infinite;color:#d62839}@keyframes bl{50%{opacity:0}}
+#fbtn{margin-top:18px;background:#f1f3f4;color:#3c4043;border:1px solid #f1f3f4;border-radius:8px;font-weight:500;transition:transform .12s,background .12s}#fbtn.press{background:#fde2e4;transform:scale(.88)}
+#tiles{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,120px));gap:14px;margin-top:34px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;background:#fff;border:1px solid #e5e7eb;box-shadow:0 2px 10px rgba(0,0,0,.08);color:#111;text-decoration:none;font-weight:700;font-size:.9rem;transition:transform .2s,box-shadow .2s}
+.tile .ic{font-size:1.8rem;line-height:1}.tile.hot{transform:translateY(-6px) scale(1.06);box-shadow:0 8px 22px rgba(214,40,57,.45)}
+#vid{position:absolute;bottom:calc(100% + 12px);width:260px;background:#0f0f0f;color:#fff;border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.35);transform:scale(0);transform-origin:50% 100%;transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:3}
+#vid.open{transform:scale(1)}#vid .scr{height:130px;background:linear-gradient(135deg,#1e3a8a,#d62839);display:flex;align-items:center;justify-content:center}
+#vid .pl{width:54px;height:38px;background:#ff0000;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+#vid .tt{padding:8px 10px 4px;font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vid .bar{height:4px;margin:4px 10px 10px;background:#444;border-radius:4px;overflow:hidden}#vid .bar i{display:block;height:100%;width:0;background:#ff0000;transition:width 2.2s linear}#vid.open .bar i{width:70%}
+#cap{position:fixed;left:50%;top:9%;transform:translateX(-50%) scale(0);max-width:min(520px,88vw);background:#fff;color:#0a1a3f;border:3px solid #d62839;border-radius:22px;padding:12px 18px;font-size:clamp(1rem,3.8vw,1.35rem);font-weight:800;text-align:center;box-shadow:0 8px 24px rgba(11,29,58,.25);z-index:6;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+#cap.show{transform:translateX(-50%) scale(1)}#cap:after{content:"";position:absolute;left:50%;bottom:-14px;margin-left:-10px;border:10px solid transparent;border-top-color:#d62839;border-bottom:0}
+#cursor{position:fixed;width:30px;height:30px;left:-40px;top:60%;transition:left .75s cubic-bezier(.34,1.4,.64,1),top .75s cubic-bezier(.34,1.4,.64,1),transform .12s;pointer-events:none;z-index:8;transform-origin:20% 10%}
+#cursor.wob{animation:wob .5s ease-in-out 2}@keyframes wob{25%{transform:rotate(-14deg)}75%{transform:rotate(12deg)}}
+#cursor.click{transform:scale(1.25,.65)}
+.fx{position:fixed;pointer-events:none;z-index:7;font-size:1.7rem;animation:fx 1.1s ease-out forwards}@keyframes fx{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}25%{opacity:1;transform:translate(-50%,-90%) scale(1.15)}100%{transform:translate(-50%,-190%) scale(1);opacity:0}}
+.boop{position:fixed;z-index:7;pointer-events:none;font-weight:900;color:#d62839;font-size:1.4rem;animation:fx .9s ease-out forwards}
+#brand{position:fixed;top:14px;left:18px;font-weight:800;color:#d62839;z-index:6}
+#skip{position:fixed;bottom:14px;right:18px;color:#d62839;font-weight:800;z-index:6;background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;text-decoration:none}
+#disc{position:fixed;bottom:8px;left:12px;right:110px;font-size:.62rem;opacity:.5;line-height:1.3;z-index:5}
+/* engine skins */
 #anim.e-grok{background:#0a0a0a;color:#fafafa}#anim.e-grok .logo{color:#fafafa;font-weight:600;letter-spacing:-1px}
 #anim.e-chatgpt{background:#fff;color:#0d0d0d}#anim.e-chatgpt .logo{font-size:clamp(1.6rem,6vw,2.2rem);font-weight:600;letter-spacing:0}
 #anim.e-grok #fbox,#anim.e-chatgpt #fbox{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:28px;min-height:64px;padding:12px 12px 12px 24px}
 #anim.e-grok #fbox{background:#1a1a1a;border-color:#333;box-shadow:none}#anim.e-chatgpt #fbox{background:#fff;border-color:#e5e5e5;box-shadow:0 2px 12px rgba(0,0,0,.08)}
-#anim.e-grok #ftext:empty:before,#anim.e-chatgpt #ftext:empty:before{content:attr(data-ph);opacity:.5}
+#anim.e-grok #ftext:empty:before,#anim.e-chatgpt #ftext:empty:before,#anim.e-yt #ftext:empty:before{content:attr(data-ph);opacity:.5}
 #anim.e-grok #fbtn,#anim.e-chatgpt #fbtn{margin:0;flex:none;width:40px;height:40px;padding:0;border-radius:50%;font-size:1.2rem;font-weight:700;border:0}
 #anim.e-grok #fbtn{background:#fafafa;color:#0a0a0a}#anim.e-chatgpt #fbtn{background:#0d0d0d;color:#fff}
-#anim.e-grok #cap{color:#ffd1c7}#anim.e-grok #brand,#anim.e-grok #anim.e-yt{background:#0f0f0f;color:#f1f1f1}#anim.e-yt .logo{color:#f1f1f1;font-weight:700;letter-spacing:-1.5px;display:flex;align-items:center;gap:8px}
-.ytl{display:inline-flex;align-items:center;justify-content:center;background:#ff0000;color:#fff;border-radius:14px;width:1.4em;height:1em;font-size:.8em}
-#anim.e-yt #fbox{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 20px;background:#121212;border-color:#303030;box-shadow:none;overflow:hidden}
-#anim.e-yt #ftext:empty:before{content:attr(data-ph);opacity:.5}
-#anim.e-yt #fbtn{margin:0;flex:none;height:52px;width:64px;border-radius:0;background:#222;border:0;border-left:1px solid #303030;color:#f1f1f1;font-size:1.1rem}
-#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
-#skip{color:#ff8a73}
-#disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
-#skip{color:#ffd1c7}
 #anim.e-yt{background:#0f0f0f;color:#f1f1f1}#anim.e-yt .logo{color:#f1f1f1;font-weight:700;letter-spacing:-1.5px;display:flex;align-items:center;gap:8px}
 .ytl{display:inline-flex;align-items:center;justify-content:center;background:#ff0000;color:#fff;border-radius:14px;width:1.4em;height:1em;font-size:.8em}
 #anim.e-yt #fbox{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 20px;background:#121212;border-color:#303030;box-shadow:none;overflow:hidden}
-#anim.e-yt #ftext:empty:before{content:attr(data-ph);opacity:.5}
 #anim.e-yt #fbtn{margin:0;flex:none;height:52px;width:64px;border-radius:0;background:#222;border:0;border-left:1px solid #303030;color:#f1f1f1;font-size:1.1rem}
-#anim.e-yt #cap,#anim.e-yt #brand,#anim.e-yt #disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
-#skip{color:#ff8a73}
-#disc{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);width:min(620px,70vw);text-align:center;font-size:.62rem;opacity:.45;line-height:1.3}
-#skip{position:fixed;bottom:18px;right:20px;color:#ff6f61;font-weight:700}#brand{position:fixed;top:14px;left:18px;font-weight:800;color:#ff6f61}
+#anim.e-grok .tile,#anim.e-yt .tile{background:#1c1c1c;border-color:#333;color:#f1f1f1}
+@media (max-width:600px){#tiles{grid-template-columns:repeat(2,minmax(0,130px))}#vid{width:220px}#vid .scr{height:100px}#disc{bottom:46px;right:12px;text-align:center;font-size:.55rem;background:rgba(255,255,255,.92);color:#333;opacity:.85;padding:4px 6px;border-radius:8px}#stage{justify-content:flex-start;padding-top:150px}}
 </style></head><body>
 <main id="home">
 <h1>Gotcha<span>Fam</span></h1>
@@ -76,10 +80,17 @@ footer{text-align:center;opacity:.7;font-size:.9rem;padding:20px}
 <footer>GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</footer>
 </main>
 <div id="anim"><div id="brand">GotchaFam</div>
+<div id="stage">
 <div class="logo" id="logo"></div>
 <div id="fbox"><span id="ftext"></span></div>
 <button id="fbtn">Search</button>
-<div id="cap"></div><div id="tip" style="display:none;margin-top:14px;font-size:1.05rem;text-align:center">Want some in-depth answers? Ask <a id="tg" style="color:#ff6f61;font-weight:700">Grok</a> or <a id="tc" style="color:#ff6f61;font-weight:700">ChatGPT</a><br><a id="ty" style="color:#ff6f61;font-weight:700">There's even videos of what you're looking for!</a></div><a id="skip" href="#">Skip »</a><div id="disc">GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</div>
+<div id="tiles"><div id="vid"><div class="scr"><div class="pl">&#9654;</div></div><div class="tt" id="vtt"></div><div class="bar"><i></i></div></div>
+<a class="tile" id="t-yt"><span class="ic"><span class="ytl">&#9654;</span></span>YouTube</a>
+<a class="tile" id="t-grok"><span class="ic">&#10022;</span>Grok</a>
+<a class="tile" id="t-chatgpt"><span class="ic">&#129302;</span>ChatGPT</a>
+<a class="tile" id="t-alt"></a></div>
+</div>
+<div id="cap"></div><a id="skip" href="#">Skip »</a><div id="disc">GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</div>
 <svg id="cursor" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>
 </div>
 <script>
@@ -105,20 +116,38 @@ b.disabled=true;b.textContent='Shortening…';$('msg').textContent='';
 viaIsgd(long).catch(function(){return viaDagd(long)}).then(function(s){l.value=s;$('msg').textContent='Shortened! Copy link now copies the short one ✂️'}).catch(function(){l.value=long;$('msg').textContent='Couldn\u2019t shorten right now, fam — the long link still works 👍'}).finally(function(){b.disabled=false;b.textContent='Shorten link'})};
 $('preview').onclick=function(){if($('link').value)location.href=$('link').value};
 if(!q)return;
-document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='flex';
+document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='block';
 var LOGOS={google:'<i class="c1">G</i><i class="c2">o</i><i class="c3">o</i><i class="c1">g</i><i class="c4">l</i><i class="c2">e</i>',ddg:'<i class="c2">Duck</i><i class="c1">Duck</i><i class="c4">Go</i>',grok:'Grok',chatgpt:'ChatGPT',yt:'<span class="ytl">&#9654;</span>YouTube'};
 $('logo').innerHTML=LOGOS[eng];$('anim').className='e-'+eng;
-if(eng==='yt'){$('ftext').setAttribute('data-ph','Search');$('fbtn').innerHTML='&#128269;';$('fbtn').setAttribute('aria-label','Search');$('fbox').appendChild($('fbtn'))}
-if(eng==='grok'||eng==='chatgpt'){$('ftext').setAttribute('data-ph','Ask anything');$('fbtn').innerHTML='&#8593;';$('fbtn').setAttribute('aria-label','Send');$('fbox').appendChild($('fbtn'))}
+if(eng==='yt'){$('ftext').setAttribute('data-ph','Search');$('fbtn').innerHTML='&#128269;';$('fbox').appendChild($('fbtn'))}
+if(eng==='grok'||eng==='chatgpt'){$('ftext').setAttribute('data-ph','Ask anything');$('fbtn').innerHTML='&#8593;';$('fbox').appendChild($('fbtn'))}
 $('skip').href=target(q);
-var cur=$('cursor'),wait=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
-function moveTo(el){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(40,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(1300)}
-function click(){cur.classList.add('click');return wait(180).then(function(){cur.classList.remove('click')})}
-function cap(t){$('cap').textContent=t}
-(async function(){await wait(500);cap('When you have a question, you can go here...');await moveTo($('fbox'));await click();$('fbox').classList.add('focus');
-await wait(300);cap('...and do this.');var t=$('ftext');for(var i=0;i<q.length;i++){t.textContent+=q[i];await wait(60+Math.random()*60)}
-await wait(400);cap('It\'s amazing, I know.');await moveTo($('fbtn'));$('fbtn').classList.add('press');await click();$('fbtn').classList.remove('press');
-if(eng==='google'||eng==='ddg'){$('tg').href=BASES.grok+encodeURIComponent(q);$('tc').href=BASES.chatgpt+encodeURIComponent(q);$('ty').href=BASES.yt+encodeURIComponent(q);await wait(900);$('tip').style.display='block';await wait(3500)}else await wait(2000);
-location.href=target(q)})();
+var alt=eng==='ddg'?'google':'ddg';$('t-alt').innerHTML=alt==='ddg'?'<span class="ic">&#129414;</span>DuckDuckGo':'<span class="ic" style="color:#4285f4;font-weight:900">G</span>Google';
+[['yt','t-yt'],['grok','t-grok'],['chatgpt','t-chatgpt'],[alt,'t-alt']].forEach(function(a){var t=$(a[1]);t.href=BASES[a[0]]+encodeURIComponent(q);t.target='_blank';t.rel='noopener'});
+$('vtt').textContent='How to '+q.replace(/^how (do i|to|do you|can i)\s+/i,'').replace(/\?+$/,'');
+var cur=$('cursor'),st=$('stage'),cam={s:1,x:0,y:0},wait=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
+function rect(el){var r=el.getBoundingClientRect();return{x:(r.left-cam.x)/cam.s,y:(r.top-cam.y)/cam.s,w:r.width/cam.s,h:r.height/cam.s}}
+function focus(els,s){var r=els.map(rect),x1=Math.min.apply(0,r.map(function(a){return a.x})),y1=Math.min.apply(0,r.map(function(a){return a.y})),x2=Math.max.apply(0,r.map(function(a){return a.x+a.w})),y2=Math.max.apply(0,r.map(function(a){return a.y+a.h}));
+var W=innerWidth,H=innerHeight;s=Math.min(s,(W*.9)/(x2-x1),(H*.6)/(y2-y1));s=Math.max(s,.6);cam={s:s,x:W/2-s*(x1+x2)/2,y:H*(W<600?.42:.56)-s*(y1+y2)/2};
+st.style.transform='translate('+cam.x+'px,'+cam.y+'px) scale('+s+')';return wait(800)}
+function moveTo(el,d){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(36,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(d||800)}
+function click(){cur.classList.add('click');return wait(160).then(function(){cur.classList.remove('click')})}
+function fx(t,el,cls){var r=(el||cur).getBoundingClientRect(),d=document.createElement('div');d.className=cls||'fx';d.textContent=t;d.style.left=(r.left+r.width/2+(Math.random()*40-20))+'px';d.style.top=(r.top+r.height/2)+'px';$('anim').appendChild(d);setTimeout(function(){d.remove()},1200)}
+async function cap(t){var c=$('cap');c.classList.remove('show');await wait(180);c.textContent=t;c.classList.add('show')}
+var hot=function(id,on){$(id).classList.toggle('hot',on)};
+(async function(){
+cap('When you have a question, you can go here... 👉');await wait(200);await focus([$('logo'),$('fbox'),$('fbtn')],1.15);
+cur.classList.add('wob');await moveTo($('fbox'),1000);cur.classList.remove('wob');await click();$('fbox').classList.add('focus');
+var t=$('ftext'),dl=Math.max(28,Math.min(75,1500/q.length)),ty=q.length>5?Math.floor(q.length/2):-1;
+for(var i=0;i<q.length;i++){if(i===ty){t.textContent+='z';await wait(dl*3);t.textContent=t.textContent.slice(0,-1);fx('😅',$('fbox'));await wait(dl*2)}t.textContent+=q[i];await wait(dl*(.6+Math.random()*.8))}
+await cap("...and do this. It's amazing, I know.");fx('🙄',$('fbox'));await wait(1200);
+await focus([$('tiles')],1.4);await cap("There's even videos of what you're looking for! 🍿");
+await moveTo($('t-yt'),750);hot('t-yt',true);var v=$('vid'),y=$('t-yt');v.style.left=(y.offsetLeft+y.offsetWidth/2-v.offsetWidth/2)+'px';v.classList.add('open');fx('🤩',y);
+await wait(200);await focus([v,y],1.4);await moveTo(y,400);await wait(800);v.classList.remove('open');hot('t-yt',false);
+await focus([$('t-grok'),$('t-chatgpt')],1.6);await cap('Want an even more in-depth answer? You can ask one of these. 🧠');
+for(var k=0;k<3;k++){var el=$(k%2?'t-chatgpt':'t-grok');hot('t-grok',!(k%2));hot('t-chatgpt',!!(k%2));await moveTo(el,520);fx('✨',el);fx('✨',el)}
+hot('t-grok',false);hot('t-chatgpt',false);
+await focus([$('logo'),$('fbox'),$('fbtn')],1.15);await moveTo($('fbtn'),750);$('fbtn').classList.add('press');await click();fx('BOOP!',$('fbtn'),'boop');$('fbtn').classList.remove('press');
+await cap('Was that so hard, fam? 😎');fx('🙄',$('cap'));await wait(1300);location.href=target(q)})();
 })();
 </script></body></html>
