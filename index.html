@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GotchaFam – We gotcha, fam.</title><link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>GotchaFam – We gotcha, fam.</title><link rel="icon" href="favicon.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+<meta name="description" content="For people who'd rather ask than search. We gotcha, fam.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="GotchaFam"><meta property="og:title" content="GotchaFam – We gotcha, fam."><meta property="og:description" content="For people who'd rather ask than search. We gotcha, fam.">
+<meta property="og:url" content="https://gotchafam.com/"><meta property="og:image" content="https://gotchafam.com/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="GotchaFam mascot: a winking magnifying glass in sunglasses and a star hoodie">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://gotchafam.com/og.png">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(ellipse at 50% 0%,#4b4a8a 0%,#3C3B6E 45%,#22214a 100%) fixed;color:#ffffff;min-height:100vh}
 main{max-width:760px;margin:0 auto;padding:40px 20px}
-h1{font-size:clamp(3rem,11vw,5.6rem);margin:0;letter-spacing:-2px;font-weight:900;text-shadow:3px 3px 0 #B22234,6px 6px 0 rgba(0,0,0,.35)}h1 span{color:#ff2f45;text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(0,0,0,.35)}
+h1{font-size:clamp(2.6rem,10vw,4.9rem);margin:0;letter-spacing:-2px;font-weight:900;text-shadow:3px 3px 0 #B22234,6px 6px 0 rgba(0,0,0,.35)}h1 span{color:#ff2f45;text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(0,0,0,.35)}
 .tag{font-size:1.15rem;opacity:.9;margin:.4em 0 2em}
 .card{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:24px;margin-bottom:28px}
 input[type=text]{width:100%;padding:16px 20px;font-size:1.1rem;border-radius:999px;border:0;outline:none;color:#111}
@@ -27,7 +31,8 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:repeating-li
 .hero:before,.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='42'%3E%3Ctext x='4' y='18' font-size='16' fill='white'%3E%E2%98%85%3C/text%3E%3Ctext x='28' y='38' font-size='12' fill='white'%3E%E2%98%85%3C/text%3E%3C/svg%3E");opacity:.35;animation:twinkle 2.4s ease-in-out infinite alternate}
 .hero:after{background-position:24px 21px;opacity:.15;animation-delay:1.2s}
 @keyframes twinkle{from{opacity:.12}to{opacity:.5}}
-.hero>*{position:relative;z-index:1}.hero .tag{margin-bottom:0}
+.hero>*{position:relative;z-index:1}.hero{display:flex;align-items:center;gap:18px}.hm{width:clamp(96px,22vw,160px);height:auto;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));animation:hmb 3s ease-in-out infinite}@keyframes hmb{50%{transform:translateY(-6px) rotate(-3deg)}}@media (max-width:520px){.hero{flex-direction:column;text-align:center}}
+#mas{position:fixed;z-index:7;width:clamp(70px,14vw,110px);pointer-events:none;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}#mas.on{display:block;animation:masin .7s cubic-bezier(.34,1.56,.64,1),masb 1s ease-in-out .7s infinite alternate}@keyframes masin{from{transform:translateY(-60px) scale(.3) rotate(-20deg);opacity:0}}@keyframes masb{to{transform:translateY(-8px) rotate(4deg)}}.hero .tag{margin-bottom:0}
 #fw{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}main{position:relative;z-index:1}
 body.touring:before{display:none}
 @media (prefers-reduced-motion:reduce){#flagband,#flagband:after,body:before,.hero:before,.hero:after{animation:none}}
@@ -76,8 +81,8 @@ body.touring:before{display:none}
 </style></head><body>
 <div id="flagband"></div><canvas id="fw"></canvas>
 <main id="home">
-<div class="hero"><h1>Gotcha<span>Fam</span></h1>
-<p class="tag">★ For people who'd rather ask than search. We gotcha, fam. 😎 ★</p></div>
+<div class="hero"><img class="hm" src="mascot.png" alt="GotchaFam mascot" width="160" height="198"><div class="ht"><h1>Gotcha<span>Fam</span></h1>
+<p class="tag">★ For people who'd rather ask than search. We gotcha, fam. 😎 ★</p></div></div>
 <section class="card">
 <input id="q" type="text" placeholder="Type the question they asked you..." autofocus>
 <div class="row"><button id="gen">Make the link</button>
@@ -107,7 +112,7 @@ body.touring:before{display:none}
 <a class="tile" id="t-chatgpt"><span class="ic">&#129302;</span>ChatGPT</a>
 <a class="tile" id="t-alt"></a></div>
 </div>
-<div id="cap"></div><a id="skip" href="#">Skip »</a><div id="disc">GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</div>
+<div id="cap"></div><img id="mas" src="mascot.png" alt=""><a id="skip" href="#">Skip »</a><div id="disc">GotchaFam is a just-for-fun tool and is not affiliated with, endorsed by, or sponsored by Google, DuckDuckGo, YouTube, xAI (Grok), OpenAI (ChatGPT), or any other service linked here. All trademarks and logos belong to their respective owners.</div>
 <svg id="cursor" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>
 </div>
 <script>
@@ -155,14 +160,15 @@ st.style.transform='translate('+cam.x+'px,'+cam.y+'px) scale('+s+')';return wait
 function moveTo(el,d){var r=el.getBoundingClientRect();cur.style.left=(r.left+Math.min(36,r.width/2))+'px';cur.style.top=(r.top+r.height/2)+'px';return wait(d||800)}
 function click(){cur.classList.add('click');return wait(160).then(function(){cur.classList.remove('click')})}
 function fx(t,el,cls){var r=(el||cur).getBoundingClientRect(),d=document.createElement('div');d.className=cls||'fx';d.textContent=t;d.style.left=(r.left+r.width/2+(Math.random()*40-20))+'px';d.style.top=(r.top+r.height/2)+'px';$('anim').appendChild(d);setTimeout(function(){d.remove()},1200)}
-async function cap(t){var c=$('cap');c.classList.remove('show');await wait(180);c.textContent=t;c.classList.add('show')}
+function mas(on){var m=$('mas');m.classList.remove('on');if(!on)return;var r=$('cap').getBoundingClientRect(),w=m.offsetWidth||Math.min(110,Math.max(70,innerWidth*.14));m.classList.add('on');w=m.offsetWidth;var l=r.right+8;if(l+w>innerWidth-6){l=innerWidth-w-6;m.style.top=(r.bottom+6)+'px'}else m.style.top=Math.max(4,r.top-20)+'px';m.style.left=l+'px'}
+async function cap(t){mas(false);var c=$('cap');c.classList.remove('show');await wait(180);c.textContent=t;c.classList.add('show')}
 var hot=function(id,on){$(id).classList.toggle('hot',on)};
 (async function(){
 cap('When you have a question, you can go here... 👉');await wait(200);await focus([$('logo'),$('fbox'),$('fbtn')],1.15);
 cur.classList.add('wob');await moveTo($('fbox'),1000);cur.classList.remove('wob');await click();$('fbox').classList.add('focus');
 var t=$('ftext'),dl=Math.max(28,Math.min(75,1500/q.length)),ty=q.length>5?Math.floor(q.length/2):-1;
 for(var i=0;i<q.length;i++){if(i===ty){t.textContent+='z';await wait(dl*3);t.textContent=t.textContent.slice(0,-1);fx('😅',$('fbox'));await wait(dl*2)}t.textContent+=q[i];await wait(dl*(.6+Math.random()*.8))}
-await cap("...and do this. It's amazing, I know.");fx('🙄',$('fbox'));await wait(1200);
+await cap("...and do this. It's amazing, I know.");await wait(320);mas(true);fx('🙄',$('fbox'));await wait(1200);
 await focus([$('tiles')],1.4);await cap("There's even videos of what you're looking for! 🍿");
 await moveTo($('t-yt'),750);hot('t-yt',true);var v=$('vid'),y=$('t-yt');v.style.left=(y.offsetLeft+y.offsetWidth/2-v.offsetWidth/2)+'px';v.classList.add('open');fx('🤩',y);
 await wait(200);await focus([v,y],1.4);await moveTo(y,400);await wait(800);v.classList.remove('open');hot('t-yt',false);
@@ -170,6 +176,6 @@ await focus([$('t-grok'),$('t-chatgpt')],1.6);$('cap').classList.add('low');awai
 for(var k=0;k<3;k++){var el=$(k%2?'t-chatgpt':'t-grok');hot('t-grok',!(k%2));hot('t-chatgpt',!!(k%2));await moveTo(el,520);fx('✨',el);fx('✨',el)}
 hot('t-grok',false);hot('t-chatgpt',false);
 await focus([$('logo'),$('fbox'),$('fbtn')],1.15);await moveTo($('fbtn'),750);$('fbtn').classList.add('press');await click();fx('★ BOOP! ★',$('fbtn'),'boop');$('fbtn').classList.remove('press');
-$('cap').classList.remove('low');await cap('Was that so hard, fam? 😎');fx('🙄',$('cap'));await wait(1300);location.href=target(q)})();
+$('cap').classList.remove('low');await cap('Was that so hard, fam? 😎');await wait(320);mas(true);fx('🙄',$('cap'));await wait(1300);location.href=target(q)})();
 })();
 </script></body></html>
