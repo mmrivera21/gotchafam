@@ -127,15 +127,20 @@ var u=base+'?q='+encodeURIComponent(v)+($('eng').value!=='google'?'&e='+$('eng')
 $('link').value=u;$('msg').textContent='';$('out').style.display='block';return u}
 $('gen').onclick=makeLink;$('q').onkeydown=function(e){if(e.key==='Enter')makeLink()};
 $('copy').onclick=function(){var b=this,l=$('link');(navigator.clipboard?navigator.clipboard.writeText(l.value):Promise.reject()).catch(function(){l.select();document.execCommand('copy')}).finally(function(){b.textContent='Copied! ✅';setTimeout(function(){b.textContent='Copy link'},1500)})};
-function jsonp(url,ms){return new Promise(function(res,rej){var cb='gfcb'+Date.now()+Math.floor(Math.random()*1e6),sc=document.createElement('script'),t;
-function done(){clearTimeout(t);delete window[cb];sc.remove()}
-window[cb]=function(d){done();res(d)};sc.onerror=function(){done();rej(new Error('network'))};t=setTimeout(function(){done();rej(new Error('timeout'))},ms||8000);
+function jsonp(url,ms){return new Promise(function(res,rej){var cb='gfcb'+Date.now()+Math.floor(Math.random()*1e6),sc=document.createElement('script'),t,fin=false;
+function done(){fin=true;clearTimeout(t);window[cb]=function(){};sc.remove()}
+window[cb]=function(d){if(fin)return;done();res(d)};
+sc.onerror=function(){if(!fin){done();rej(new Error('network'))}};
+sc.onload=function(){setTimeout(function(){if(!fin){done();rej(new Error('bad reply'))}},50)};
+t=setTimeout(function(){if(!fin){done();rej(new Error('timeout'))}},ms||5000);
 sc.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb;document.head.appendChild(sc)})}
-function viaIsgd(u){return jsonp('https://is.gd/create.php?format=json&url='+encodeURIComponent(u)).then(function(d){if(d&&d.shorturl)return d.shorturl;throw new Error((d&&d.errormessage)||'is.gd failed')})}
-function viaDagd(u){var c=new AbortController(),t=setTimeout(function(){c.abort()},8000);return fetch('https://da.gd/s?url='+encodeURIComponent(u),{signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw new Error('da.gd '+r.status);return r.text()}).then(function(s){s=s.trim();if(!/^https:\/\/da\.gd\/\S+$/.test(s))throw new Error('da.gd bad reply');return s})}
-$('shorten').onclick=function(){var b=this,l=$('link'),long=l.value;if(!long)return;if(/^https:\/\/(is|da)\.gd\//.test(long)){$('msg').textContent='Already short, fam 👌';return}
-b.disabled=true;b.textContent='Shortening…';$('msg').textContent='';
-viaIsgd(long).catch(function(){return viaDagd(long)}).then(function(s){l.value=s;$('msg').textContent='Shortened! Copy link now copies the short one ✂️'}).catch(function(){l.value=long;$('msg').textContent='Couldn\u2019t shorten right now, fam — the long link still works 👍'}).finally(function(){b.disabled=false;b.textContent='Shorten link'})};
+function viaGd(host,u){return jsonp('https://'+host+'/create.php?format=json&url='+encodeURIComponent(u)).then(function(d){if(d&&d.shorturl)return d.shorturl;throw new Error((d&&d.errormessage)||host+' failed')})}
+function viaDagd(u){var c=window.AbortController?new AbortController():null,t=setTimeout(function(){c&&c.abort()},5000);
+return fetch('https://da.gd/s?url='+encodeURIComponent(u),{signal:c?c.signal:undefined,cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('da.gd '+r.status);return r.text()}).then(function(s){clearTimeout(t);s=s.trim();if(!/^https:\/\/da\.gd\/[A-Za-z0-9_-]+$/.test(s))throw new Error('da.gd bad reply');return s},function(e){clearTimeout(t);throw e})}
+function shorten(u){return viaDagd(u).catch(function(){return viaGd('is.gd',u)}).catch(function(){return viaGd('v.gd',u)})}
+$('shorten').onclick=function(){var b=this,l=$('link'),long=l.value;if(!long)return;if(/^https:\/\/(is|v|da)\.gd\//.test(long)){$('msg').textContent='Already short, fam 👌';return}
+b.disabled=true;b.textContent='Shortening…';$('msg').textContent='Shortening your link…';
+shorten(long).then(function(s){if(l.value===long)l.value=s;$('msg').textContent='Shortened! ✂️ Copy link now copies '+s}).catch(function(){$('msg').textContent='Couldn\u2019t shorten right now, fam — the long link still works 👍'}).finally(function(){b.disabled=false;b.textContent='Shorten link'})};
 $('preview').onclick=function(){if($('link').value)location.href=$('link').value};
 (function(){var c=$('fw');if(!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var x=c.getContext('2d'),P=[],col=['#B22234','#ffffff','#6f6ed6','#ff2f45'];
 function sz(){c.width=innerWidth;c.height=innerHeight}sz();addEventListener('resize',sz);
