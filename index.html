@@ -83,6 +83,7 @@ body.touring:before{display:none}
 #anim.e-yt #fbtn{margin:0;flex:none;height:52px;width:64px;border-radius:0;background:#222;border:0;border-left:1px solid #303030;color:#f1f1f1;font-size:1.1rem}
 #anim.e-grok .tile,#anim.e-yt .tile{background:#1c1c1c;border-color:#333;color:#f1f1f1}
 @media (max-width:600px){#tiles{grid-template-columns:repeat(2,minmax(0,130px))}#vid{width:220px}#vid .scr{height:100px}#disc{bottom:46px;right:12px;text-align:center;font-size:.55rem;background:rgba(255,255,255,.92);color:#333;opacity:.85;padding:4px 6px;border-radius:8px}#stage{justify-content:flex-start;padding-top:150px}}
+.hof{text-align:center;margin:0 0 28px}.hofbtn{display:inline-block;font-weight:900;font-size:clamp(1.05rem,3.6vw,1.3rem);color:#3C3B6E;text-decoration:none;padding:14px 26px;border-radius:999px;background:linear-gradient(180deg,#fff,#e8e8f2);box-shadow:0 0 0 3px #B22234,0 0 0 6px #fff,0 8px 22px rgba(0,0,0,.35);transition:transform .15s}.hofbtn:hover{transform:translateY(-2px) scale(1.03)}
 </style></head><body>
 <div id="flagband"></div><canvas id="fw"></canvas>
 <main id="home">
@@ -95,7 +96,7 @@ body.touring:before{display:none}
 <div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="shorten">Shorten link</button><button class="alt" id="preview">Preview</button></div><p id="msg" style="margin:8px 0 0;font-size:.95rem;min-height:1.2em"></p></div>
 </section>
 <p id="count" class="count" hidden></p>
-<section class="card" id="wall-card" hidden><h2>Hall of Fame: funniest questions</h2><p class="wsub">Real classics, lovingly hand-picked. Tap one to see the show, or 😂 +1 your favorites.</p><div id="wsort"><button class="alt on" data-s="top">★ Top</button><button class="alt" data-s="new">Newest</button></div><div id="wall"></div></section>
+<p class="hof"><a class="hofbtn" href="/funniest.html">🏆 See the funniest questions</a></p>
 <section class="card"><h2>How it works</h2><div class="steps">
 <div class="step"><b>1</b>Type the question your friend could've searched themselves.</div>
 <div class="step"><b>2</b>Hit "Make the link" and copy it.</div>
@@ -155,19 +156,7 @@ function burst(){if(document.hidden||$('home').style.display==='none')return;var
 var run=0;function tick(){x.clearRect(0,0,c.width,c.height);P=P.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.03;p.vx*=.985;p.l-=.012;if(p.l<=0)return false;x.globalAlpha=p.l;x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,2.2,0,7);x.fill();return true});x.globalAlpha=1;if(P.length)requestAnimationFrame(tick);else run=0}
 setTimeout(burst,600);setInterval(burst,2600)})();
 var CTR='https://abacus.jasoncameron.dev/';
-if(!q){fetch(CTR+'get/gotchafam.com/gotchad').then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&d.value>0){var c=$('count');c.innerHTML='★ <b>'+Number(d.value).toLocaleString('en-US')+'</b> '+(d.value===1?'person':'people')+' gotcha\u2019d so far ★';c.hidden=false}}).catch(function(){});
-var VK='gf-votes',voted={};try{voted=JSON.parse(localStorage.getItem(VK)||'{}')}catch(e){}
-var QS=[],sortBy='top';
-function render(){var w=$('wall');w.innerHTML='';QS.slice().sort(function(a,b){return sortBy==='top'?(b.v-a.v)||(b.added>a.added?1:-1):(b.added>a.added?1:b.added<a.added?-1:0)}).forEach(function(o){
-var r=document.createElement('div');r.className='qrow';var e=document.createElement('a');e.className='qchip';e.textContent=o.q;e.href='?q='+encodeURIComponent(o.q);
-var b=document.createElement('button');b.className='vote'+(voted[o.id]?' on':'');b.disabled=!!voted[o.id];b.title=voted[o.id]?'You voted':'Vote this one up';b.innerHTML='😂 '+(voted[o.id]?'':'+1 ')+'<span>'+(o.v>=0?o.v.toLocaleString('en-US'):'–')+'</span>';
-b.onclick=function(){if(voted[o.id])return;voted[o.id]=1;try{localStorage.setItem(VK,JSON.stringify(voted))}catch(e){}o.v=Math.max(0,o.v)+1;render();
-fetch(CTR+'hit/gotchafam.com/q-'+o.id).then(function(r){return r.json()}).then(function(d){if(d&&d.value>=0){o.v=d.value;render()}}).catch(function(){})};
-r.appendChild(e);r.appendChild(b);w.appendChild(r)})}
-document.querySelectorAll('#wsort button').forEach(function(b){b.onclick=function(){sortBy=b.dataset.s;document.querySelectorAll('#wsort button').forEach(function(x){x.classList.toggle('on',x===b)});render()}});
-fetch('questions.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(a){QS=a.filter(function(o){return o&&o.id&&o.q}).slice(0,40).map(function(o){return{id:o.id,q:String(o.q).trim().replace(/\?+$/,''),added:o.added||'',v:0}});
-if(!QS.length)return;$('wall-card').hidden=false;render();
-Promise.all(QS.map(function(o){return fetch(CTR+'get/gotchafam.com/q-'+o.id).then(function(r){return r.ok?r.json():{value:0}}).then(function(d){o.v=d.value||0}).catch(function(){})})).then(render)}).catch(function(){})}
+if(!q){fetch(CTR+'get/gotchafam.com/gotchad').then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&d.value>0){var c=$('count');c.innerHTML='★ <b>'+Number(d.value).toLocaleString('en-US')+'</b> '+(d.value===1?'person':'people')+' gotcha\u2019d so far ★';c.hidden=false}}).catch(function(){});}
 if(!q)return;
 try{fetch(CTR+'hit/gotchafam.com/gotchad',{keepalive:true}).catch(function(){})}catch(e){}
 document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='block';document.body.classList.add('touring');$('flagband').style.display='none';
