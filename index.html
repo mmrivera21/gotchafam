@@ -34,7 +34,9 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:repeating-li
 .hero>*{position:relative;z-index:1}.hero{display:flex;align-items:center;gap:18px}.hm{width:clamp(96px,22vw,160px);height:auto;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));animation:hmb 3s ease-in-out infinite}@keyframes hmb{50%{transform:translateY(-6px) rotate(-3deg)}}@media (max-width:520px){.hero{flex-direction:column;text-align:center}}
 #mas{position:fixed;z-index:7;width:clamp(70px,14vw,110px);pointer-events:none;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}#mas.on{display:block;animation:masin .7s cubic-bezier(.34,1.56,.64,1),masb 1s ease-in-out .7s infinite alternate}@keyframes masin{from{transform:translateY(-60px) scale(.3) rotate(-20deg);opacity:0}}@keyframes masb{to{transform:translateY(-8px) rotate(4deg)}}.hero .tag{margin-bottom:0}
 .count{text-align:center;font-weight:900;font-size:clamp(1.1rem,4vw,1.5rem);margin:-6px 0 24px;text-shadow:2px 2px 0 #B22234}.count b{color:#ff2f45;text-shadow:2px 2px 0 #fff}
-.wsub{margin:-6px 0 14px;opacity:.85}#wall{display:flex;flex-wrap:wrap;gap:10px}
+.wsub{margin:-6px 0 14px;opacity:.85}#wall{display:flex;flex-wrap:wrap;gap:12px}.qrow{display:inline-flex;align-items:center;gap:6px}
+#wsort{display:flex;gap:8px;margin:0 0 14px}#wsort button{padding:7px 14px;font-size:.9rem}#wsort button.on{background:linear-gradient(180deg,#e0475a,#B22234);color:#fff}
+.vote{padding:7px 11px;font-size:.85rem;background:linear-gradient(180deg,#fff,#e8e8f2);color:#3C3B6E;text-shadow:none;box-shadow:0 0 0 2px #3C3B6E}.vote span{font-weight:900;margin-left:4px;padding-left:7px;border-left:1px solid rgba(60,59,110,.35)}.vote.on{background:#3C3B6E;color:#fff;box-shadow:0 0 0 2px #fff;cursor:default}
 .qchip{display:inline-block;background:#fff;color:#3C3B6E;font-weight:700;padding:9px 15px;border-radius:999px;text-decoration:none;box-shadow:0 0 0 2px #B22234,0 4px 10px rgba(0,0,0,.25);transition:transform .15s}.qchip:hover{transform:translateY(-2px) rotate(-1deg)}.qchip:before{content:"\201C"}.qchip:after{content:"?\201D"}
 #fw{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}main{position:relative;z-index:1}
 body.touring:before{display:none}
@@ -93,7 +95,7 @@ body.touring:before{display:none}
 <div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="shorten">Shorten link</button><button class="alt" id="preview">Preview</button></div><p id="msg" style="margin:8px 0 0;font-size:.95rem;min-height:1.2em"></p></div>
 </section>
 <p id="count" class="count" hidden></p>
-<section class="card" id="wall-card" hidden><h2>Funniest questions</h2><p class="wsub">Real classics, lovingly hand-picked. Tap one to see the show.</p><div id="wall"></div></section>
+<section class="card" id="wall-card" hidden><h2>Hall of Fame: funniest questions</h2><p class="wsub">Real classics, lovingly hand-picked. Tap one to see the show, or 😂 +1 your favorites.</p><div id="wsort"><button class="alt on" data-s="top">★ Top</button><button class="alt" data-s="new">Newest</button></div><div id="wall"></div></section>
 <section class="card"><h2>How it works</h2><div class="steps">
 <div class="step"><b>1</b>Type the question your friend could've searched themselves.</div>
 <div class="step"><b>2</b>Hit "Make the link" and copy it.</div>
@@ -154,7 +156,18 @@ var run=0;function tick(){x.clearRect(0,0,c.width,c.height);P=P.filter(function(
 setTimeout(burst,600);setInterval(burst,2600)})();
 var CTR='https://abacus.jasoncameron.dev/';
 if(!q){fetch(CTR+'get/gotchafam.com/gotchad').then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&d.value>0){var c=$('count');c.innerHTML='★ <b>'+Number(d.value).toLocaleString('en-US')+'</b> '+(d.value===1?'person':'people')+' gotcha\u2019d so far ★';c.hidden=false}}).catch(function(){});
-fetch('questions.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(a){var w=$('wall');a.slice(0,30).forEach(function(t){t=String(t).trim().replace(/\?+$/,'');if(!t)return;var e=document.createElement('a');e.className='qchip';e.textContent=t;e.href='?q='+encodeURIComponent(t);w.appendChild(e)});if(w.children.length)$('wall-card').hidden=false}).catch(function(){})}
+var VK='gf-votes',voted={};try{voted=JSON.parse(localStorage.getItem(VK)||'{}')}catch(e){}
+var QS=[],sortBy='top';
+function render(){var w=$('wall');w.innerHTML='';QS.slice().sort(function(a,b){return sortBy==='top'?(b.v-a.v)||(b.added>a.added?1:-1):(b.added>a.added?1:b.added<a.added?-1:0)}).forEach(function(o){
+var r=document.createElement('div');r.className='qrow';var e=document.createElement('a');e.className='qchip';e.textContent=o.q;e.href='?q='+encodeURIComponent(o.q);
+var b=document.createElement('button');b.className='vote'+(voted[o.id]?' on':'');b.disabled=!!voted[o.id];b.title=voted[o.id]?'You voted':'Vote this one up';b.innerHTML='😂 '+(voted[o.id]?'':'+1 ')+'<span>'+(o.v>=0?o.v.toLocaleString('en-US'):'–')+'</span>';
+b.onclick=function(){if(voted[o.id])return;voted[o.id]=1;try{localStorage.setItem(VK,JSON.stringify(voted))}catch(e){}o.v=Math.max(0,o.v)+1;render();
+fetch(CTR+'hit/gotchafam.com/q-'+o.id).then(function(r){return r.json()}).then(function(d){if(d&&d.value>=0){o.v=d.value;render()}}).catch(function(){})};
+r.appendChild(e);r.appendChild(b);w.appendChild(r)})}
+document.querySelectorAll('#wsort button').forEach(function(b){b.onclick=function(){sortBy=b.dataset.s;document.querySelectorAll('#wsort button').forEach(function(x){x.classList.toggle('on',x===b)});render()}});
+fetch('questions.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(a){QS=a.filter(function(o){return o&&o.id&&o.q}).slice(0,40).map(function(o){return{id:o.id,q:String(o.q).trim().replace(/\?+$/,''),added:o.added||'',v:0}});
+if(!QS.length)return;$('wall-card').hidden=false;render();
+Promise.all(QS.map(function(o){return fetch(CTR+'get/gotchafam.com/q-'+o.id).then(function(r){return r.ok?r.json():{value:0}}).then(function(d){o.v=d.value||0}).catch(function(){})})).then(render)}).catch(function(){})}
 if(!q)return;
 try{fetch(CTR+'hit/gotchafam.com/gotchad',{keepalive:true}).catch(function(){})}catch(e){}
 document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='block';document.body.classList.add('touring');$('flagband').style.display='none';
