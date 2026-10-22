@@ -33,6 +33,9 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:repeating-li
 @keyframes twinkle{from{opacity:.12}to{opacity:.5}}
 .hero>*{position:relative;z-index:1}.hero{display:flex;align-items:center;gap:18px}.hm{width:clamp(96px,22vw,160px);height:auto;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));animation:hmb 3s ease-in-out infinite}@keyframes hmb{50%{transform:translateY(-6px) rotate(-3deg)}}@media (max-width:520px){.hero{flex-direction:column;text-align:center}}
 #mas{position:fixed;z-index:7;width:clamp(70px,14vw,110px);pointer-events:none;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}#mas.on{display:block;animation:masin .7s cubic-bezier(.34,1.56,.64,1),masb 1s ease-in-out .7s infinite alternate}@keyframes masin{from{transform:translateY(-60px) scale(.3) rotate(-20deg);opacity:0}}@keyframes masb{to{transform:translateY(-8px) rotate(4deg)}}.hero .tag{margin-bottom:0}
+.count{text-align:center;font-weight:900;font-size:clamp(1.1rem,4vw,1.5rem);margin:-6px 0 24px;text-shadow:2px 2px 0 #B22234}.count b{color:#ff2f45;text-shadow:2px 2px 0 #fff}
+.wsub{margin:-6px 0 14px;opacity:.85}#wall{display:flex;flex-wrap:wrap;gap:10px}
+.qchip{display:inline-block;background:#fff;color:#3C3B6E;font-weight:700;padding:9px 15px;border-radius:999px;text-decoration:none;box-shadow:0 0 0 2px #B22234,0 4px 10px rgba(0,0,0,.25);transition:transform .15s}.qchip:hover{transform:translateY(-2px) rotate(-1deg)}.qchip:before{content:"\201C"}.qchip:after{content:"?\201D"}
 #fw{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}main{position:relative;z-index:1}
 body.touring:before{display:none}
 @media (prefers-reduced-motion:reduce){#flagband,#flagband:after,body:before,.hero:before,.hero:after{animation:none}}
@@ -89,6 +92,8 @@ body.touring:before{display:none}
 <label>Engine: <select id="eng" style="padding:10px 14px;border-radius:999px;border:0;font-size:1rem"><option value="google">Google</option><option value="ddg">DuckDuckGo</option><option value="grok">Grok</option><option value="chatgpt">ChatGPT</option><option value="yt">YouTube</option></select></label></div>
 <div id="out"><div class="row"><input id="link" readonly><button class="alt" id="copy">Copy link</button><button class="alt" id="shorten">Shorten link</button><button class="alt" id="preview">Preview</button></div><p id="msg" style="margin:8px 0 0;font-size:.95rem;min-height:1.2em"></p></div>
 </section>
+<p id="count" class="count" hidden></p>
+<section class="card" id="wall-card" hidden><h2>Funniest questions</h2><p class="wsub">Real classics, lovingly hand-picked. Tap one to see the show.</p><div id="wall"></div></section>
 <section class="card"><h2>How it works</h2><div class="steps">
 <div class="step"><b>1</b>Type the question your friend could've searched themselves.</div>
 <div class="step"><b>2</b>Hit "Make the link" and copy it.</div>
@@ -147,7 +152,11 @@ function sz(){c.width=innerWidth;c.height=innerHeight}sz();addEventListener('res
 function burst(){if(document.hidden||$('home').style.display==='none')return;var cx=Math.random()*c.width,cy=c.height*(.08+Math.random()*.3),k=col[Math.floor(Math.random()*col.length)];for(var i=0;i<38;i++){var a=Math.PI*2*i/38,v=1.5+Math.random()*2.2;P.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:k})}if(P.length&&!run){run=1;requestAnimationFrame(tick)}}
 var run=0;function tick(){x.clearRect(0,0,c.width,c.height);P=P.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.03;p.vx*=.985;p.l-=.012;if(p.l<=0)return false;x.globalAlpha=p.l;x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,2.2,0,7);x.fill();return true});x.globalAlpha=1;if(P.length)requestAnimationFrame(tick);else run=0}
 setTimeout(burst,600);setInterval(burst,2600)})();
+var CTR='https://abacus.jasoncameron.dev/';
+if(!q){fetch(CTR+'get/gotchafam.com/gotchad').then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&d.value>0){var c=$('count');c.innerHTML='★ <b>'+Number(d.value).toLocaleString('en-US')+'</b> '+(d.value===1?'person':'people')+' gotcha\u2019d so far ★';c.hidden=false}}).catch(function(){});
+fetch('questions.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(a){var w=$('wall');a.slice(0,30).forEach(function(t){t=String(t).trim().replace(/\?+$/,'');if(!t)return;var e=document.createElement('a');e.className='qchip';e.textContent=t;e.href='?q='+encodeURIComponent(t);w.appendChild(e)});if(w.children.length)$('wall-card').hidden=false}).catch(function(){})}
 if(!q)return;
+try{fetch(CTR+'hit/gotchafam.com/gotchad',{keepalive:true}).catch(function(){})}catch(e){}
 document.title='Let me show you, fam…';$('home').style.display='none';$('anim').style.display='block';document.body.classList.add('touring');$('flagband').style.display='none';
 var LOGOS={google:'<i class="c1">G</i><i class="c2">o</i><i class="c3">o</i><i class="c1">g</i><i class="c4">l</i><i class="c2">e</i>',ddg:'<i class="c2">Duck</i><i class="c1">Duck</i><i class="c4">Go</i>',grok:'Grok',chatgpt:'ChatGPT',yt:'<span class="ytl">&#9654;</span>YouTube'};
 $('logo').innerHTML=LOGOS[eng];$('anim').className='e-'+eng;
